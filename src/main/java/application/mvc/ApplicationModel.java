@@ -1,7 +1,7 @@
 package application.mvc;
 
 import application.core.ApplicationData;
-import application.initializer.InputFactory;
+import application.service.ApplicationInput;
 import application.service.ApplicationService;
 import ui.template.Model;
 
@@ -9,9 +9,9 @@ public class ApplicationModel extends Model implements ApplicationControllerAcce
     private final ApplicationData data;
     private final ApplicationService service;
 
-    public ApplicationModel(InputFactory inputFactory) {
+    public ApplicationModel(ApplicationInput input) {
         data = new ApplicationData();
-        service = new ApplicationService(inputFactory);
+        service = new ApplicationService(input);
     }
 
     //View

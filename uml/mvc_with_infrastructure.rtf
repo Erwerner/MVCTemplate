@@ -1,0 +1,147 @@
+@startuml
+package application{
+    package core{
+class ApplicationData
+{
+value
++getValue()
++setValue(boolean value)
+}
+    }
+    package initializer{
+class ApplicationInitializer
+{
+ApplicationInitializer(ViewFactory, InputFactory)
+}
+class ViewFactory
+{
++{abstract} makeApllicationView(ApplicationModel)
+}
+class InputFactory
+{
++{abstract} getInput(): ApplicationInput
+}
+    }
+    package mvc{
+interface ApplicationControllerAccess
+{
++ execute()
+}
+class ApplicationModel
+{
+ApplicationData data
+ApplicationService service
++ApplicationModel(ApplicationInput)
++ getValue()
++ execute()
+}
+interface ApplicationViewAccess {
++ getValue()
+}
+    }
+    package service{
+class ApplicationService
+{
++ApplicationService(ApplicationInput)
++ execute(ApplicationData)
+}
+class ApplicationInput
+{
+{abstract}+readValue()
+}
+    }
+  }
+  package ui{
+    package template{
+class Controller
+{
+Model model
+Controller(Model)
+}
+class Model {
+View[] views
++ registerView(View)
++ notifyViews()
+}
+class View
+{
+Model model
+View(Model)
+# {abstract} initController()
++ {abstract} update()
+}
+
+    }
+    package console{
+class ConsoleController
+{
++ ConsoleController(Model)
++ execute()
+}
+class ConsoleView
+{
+ConsoleController controller
+ConsoleView(Model)
+# initController()
++ update()
+}
+class ConsoleViewFactory
+{
++ makeApllicationView(ApplicationModel)
+}
+    }
+  }
+
+  package infrastructure{
+    package input{
+class InfrastructureInput {
++readValue()
+}
+class InfrastructureFactory{
++ getInput(): ApplicationInput
+}
+    }
+  }
+
+
+class Starter {
++ void main(String[] args)
+}
+
+ApplicationInitializer ..> ViewFactory
+ApplicationInitializer ..> ApplicationModel
+ApplicationInitializer ..> InputFactory
+ViewFactory ..> ApplicationModel
+
+ApplicationModel --|> Model
+ApplicationModel ..|> ApplicationControllerAccess
+ApplicationModel .left.|> ApplicationViewAccess
+ApplicationModel o--> ApplicationData
+ApplicationModel o--> ApplicationService
+
+ApplicationService ..> ApplicationData
+
+ConsoleController --|> Controller
+ConsoleController ..> ApplicationControllerAccess
+
+ConsoleView --|> View
+ConsoleView ..> ApplicationViewAccess
+ConsoleView ..> ConsoleController
+
+ConsoleViewFactory --|> ViewFactory
+ConsoleViewFactory ..> ApplicationModel
+ConsoleViewFactory ..> ConsoleView
+Controller  o-down-> Model
+Model o-up-> View
+View o--> Model
+
+Starter ..> ApplicationInitializer
+Starter ..>  ConsoleViewFactory
+Starter ..> InfrastructureFactory
+InfrastructureInput --|> ApplicationInput
+InfrastructureFactory --|> InputFactory
+InfrastructureFactory ..> InfrastructureInput
+InputFactory ..> ApplicationInput
+ApplicationService o-up-> ApplicationInput
+ApplicationModel ..> ApplicationInput
+@enduml

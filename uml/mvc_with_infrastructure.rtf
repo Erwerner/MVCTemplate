@@ -13,10 +13,6 @@ class ApplicationInitializer
 {
 ApplicationInitializer(ViewFactory, InputFactory)
 }
-class ViewFactory
-{
-+{abstract} makeApllicationView(ApplicationModel)
-}
 class InputFactory
 {
 +{abstract} getInput(): ApplicationInput
@@ -70,6 +66,10 @@ View(Model)
 # {abstract} initController()
 + {abstract} update()
 }
+class ViewFactory
+{
++{abstract} makeViews(Model)
+}
 
     }
     package console{
@@ -87,7 +87,7 @@ ConsoleView(Model)
 }
 class ConsoleViewFactory
 {
-+ makeApllicationView(ApplicationModel)
++ makeViews(Model)
 }
     }
   }
@@ -111,7 +111,7 @@ class Starter {
 ApplicationInitializer ..> ViewFactory
 ApplicationInitializer ..> ApplicationModel
 ApplicationInitializer ..> InputFactory
-ViewFactory ..> ApplicationModel
+ViewFactory ..> Model
 
 ApplicationModel --|> Model
 ApplicationModel ..|> ApplicationControllerAccess
@@ -129,9 +129,9 @@ ConsoleView ..> ApplicationViewAccess
 ConsoleView ..> ConsoleController
 
 ConsoleViewFactory --|> ViewFactory
-ConsoleViewFactory ..> ApplicationModel
-ConsoleViewFactory ..> ConsoleView
-Controller  o-down-> Model
+ConsoleViewFactory .right.> ConsoleView
+ConsoleViewFactory ..> Model
+Controller  o--> Model
 Model o-up-> View
 View o--> Model
 

@@ -2,5 +2,5 @@ package application.service;
 
 public abstract class ApplicationInput {
 
-    public abstract boolean readValue();
+    public abstract String readValue();
 }

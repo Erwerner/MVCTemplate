@@ -12,15 +12,20 @@ public class ConsoleView extends View {
 	private HashMap<ConsoleControllerType, ConsoleController> controllers;
 	private boolean active = true;
 	private ConsoleControllerFactory controllerFactory;
+	private final GuiFrame guiView;
 
 	public ConsoleView(Model model) {
 		super(model);
+		guiView = new GuiFrame((ApplicationViewAccess) model);
+		guiView.show();
 		run();
 	}
 
 	private void run() {
 		while (active) {
-			ConsoleControllerType controller = (ConsoleControllerType) IO.getEnumFromInput("Choose Controller", ConsoleControllerType.values());
+			ConsoleControllerType controller = (ConsoleControllerType) IO
+					.getEnumFromInput("Choose Command",
+							ConsoleControllerType.values());
 			controllers.get(controller).execute();
 		}
 	}
@@ -39,6 +44,7 @@ public class ConsoleView extends View {
 			@Override
 			public void execute() {
 				System.out.println("Closing View...");
+				guiView.dispose();
 				active = false;
 			}
 		};
@@ -46,7 +52,7 @@ public class ConsoleView extends View {
 
 	@Override
 	public void update() {
-		System.out.println(getModel().getValue());
+		guiView.repaint();
 	}
 
 	private ApplicationViewAccess getModel() {

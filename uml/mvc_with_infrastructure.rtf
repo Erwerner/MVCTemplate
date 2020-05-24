@@ -49,22 +49,14 @@ class ApplicationInput
   }
   package ui{
     package template{
-class Controller
-{
-Model model
-Controller(Model)
-}
 class Model {
 View[] views
 + registerView(View)
 + notifyViews()
 }
-class View
+interface View
 {
-Model model
-View(Model)
-# {abstract} initController()
-+ {abstract} update()
++ update()
 }
 class ViewFactory
 {
@@ -75,14 +67,15 @@ class ViewFactory
     package console{
 class ConsoleController
 {
-+ ConsoleController(Model)
+ApplicationControllerAccess model
++ ConsoleController(ApplicationControllerAccess)
 + execute()
 }
 class ConsoleView
 {
 ConsoleController controller
+ApplicationViewAccess model
 ConsoleView(Model)
-# initController()
 + update()
 }
 class ConsoleViewFactory
@@ -115,25 +108,24 @@ ViewFactory ..> Model
 
 ApplicationModel --|> Model
 ApplicationModel ..|> ApplicationControllerAccess
-ApplicationModel .left.|> ApplicationViewAccess
+ApplicationModel ..|> ApplicationViewAccess
 ApplicationModel o--> ApplicationData
 ApplicationModel o--> ApplicationService
 
 ApplicationService ..> ApplicationData
 
-ConsoleController --|> Controller
-ConsoleController ..> ApplicationControllerAccess
+ConsoleController o--> ApplicationControllerAccess
 
-ConsoleView --|> View
-ConsoleView ..> ApplicationViewAccess
+ConsoleView ..> Model
+ConsoleView o-->ApplicationViewAccess
+
+ConsoleView ..|> View
 ConsoleView ..> ConsoleController
 
 ConsoleViewFactory --|> ViewFactory
-ConsoleViewFactory .right.> ConsoleView
+ConsoleViewFactory ..> ConsoleView
 ConsoleViewFactory ..> Model
-Controller  o--> Model
 Model o-up-> View
-View o--> Model
 
 Starter ..> ApplicationInitializer
 Starter ..>  ConsoleViewFactory
@@ -142,6 +134,6 @@ InfrastructureInput --|> ApplicationInput
 InfrastructureFactory --|> InputFactory
 InfrastructureFactory ..> InfrastructureInput
 InputFactory ..> ApplicationInput
-ApplicationService o-up-> ApplicationInput
+ApplicationService o--> ApplicationInput
 ApplicationModel ..> ApplicationInput
 @enduml

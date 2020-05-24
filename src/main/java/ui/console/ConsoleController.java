@@ -1,18 +1,14 @@
 package ui.console;
 
-import ui.template.Controller;
-import ui.template.Model;
 import application.mvc.ApplicationControllerAccess;
 
-public abstract class ConsoleController extends Controller {
+public abstract class ConsoleController {
 
-    public ConsoleController(Model model) {
-        super(model);
+    protected final ApplicationControllerAccess model;
+
+    public ConsoleController(ApplicationControllerAccess model) {
+        this.model = model;
     }
 
     public abstract void execute();
-
-    protected ApplicationControllerAccess getModel() {
-        return (ApplicationControllerAccess) this.model;
-    }
 }

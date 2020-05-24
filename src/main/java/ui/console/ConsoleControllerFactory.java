@@ -1,14 +1,14 @@
 package ui.console;
 
-import ui.template.Model;
+import application.mvc.ApplicationControllerAccess;
 
 public class ConsoleControllerFactory {
-	public ConsoleController initDoController(Model model) {
-		return new ConsoleController(model) {
-			@Override
-			public void execute() {
-				getModel().execute();
-			}
-		};
-	}
+    public ConsoleController initDoController(ApplicationControllerAccess model) {
+        return new ConsoleController(model) {
+            @Override
+            public void execute() {
+                model.execute();
+            }
+        };
+    }
 }

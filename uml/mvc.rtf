@@ -39,22 +39,14 @@ class ApplicationService {
   }
   package ui{
     package template{
-class Controller
-{
-Model model
-Controller(Model)
-}
 class Model {
 View[] views
 + registerView(View)
 + notifyViews()
 }
-class View
+interface View
 {
-Model model
-View(Model)
-# {abstract} initController()
-+ {abstract} update()
++ update()
 }
 class ViewFactory
 {
@@ -64,14 +56,15 @@ class ViewFactory
     package console{
 class ConsoleController
 {
-+ ConsoleController(Model)
+ApplicationControllerAccess model
++ ConsoleController(ApplicationControllerAccess)
 + execute()
 }
 class ConsoleView
 {
 ConsoleController controller
+ApplicationViewAccess model
 ConsoleView(Model)
-# initController()
 + update()
 }
 class ConsoleViewFactory
@@ -90,25 +83,24 @@ ViewFactory .down.> Model
 
 ApplicationModel --|> Model
 ApplicationModel ..|> ApplicationControllerAccess
-ApplicationModel .right.|> ApplicationViewAccess
+ApplicationModel .left.|> ApplicationViewAccess
 ApplicationModel o--> ApplicationData
 ApplicationModel o--> ApplicationService
 
 ApplicationService ..> ApplicationData
 
-ConsoleController --|> Controller
-ConsoleController ..> ApplicationControllerAccess
+ConsoleController o--> ApplicationControllerAccess
 
-ConsoleView --|> View
-ConsoleView ..> ApplicationViewAccess
+ConsoleView ..> Model
+ConsoleView o-->ApplicationViewAccess
+
+ConsoleView ..|> View
 ConsoleView ..> ConsoleController
 
 ConsoleViewFactory --|> ViewFactory
 ConsoleViewFactory ..> Model
 ConsoleViewFactory ..> ConsoleView
-Controller  o--> Model
-Model o-left-> View
-View o--> Model
+Model o-up-> View
 
 Starter ..> ApplicationInitializer
 Starter ..>  ConsoleViewFactory
